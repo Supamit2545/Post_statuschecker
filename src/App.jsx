@@ -75,7 +75,7 @@ const App = () => {
         setCurrentSearch(foundData)
 
         setResultMessage(
-          `พบข้อมูลใน ${foundData.sheet}`
+          `พบข้อมูล`
         )
 
         setResultColor("text-green-500")
@@ -203,7 +203,7 @@ const App = () => {
         <div className='Submit_Btn'>
 
           <button
-            className='w-100 h-10 border-red-500 border-2 rounded-2xl bg-red-900 hover:cursor-pointer hover:bg-red-600 transition-all px-10'
+            className='w-9/11 h-10 border-red-500 border-2 rounded-2xl bg-red-900 hover:cursor-pointer hover:bg-red-600 transition-all px-10'
             onClick={Getdata}
           >
             ตรวจสอบสถานะ
