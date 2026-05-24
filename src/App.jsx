@@ -51,7 +51,7 @@ const App = () => {
 
         // หาเลขงาน
         const found = rows.find(
-          row => row[1] === Input_from_user
+          row => row[1] === Input_from_user.toUpperCase()
         )
 
         // ถ้าเจอ
@@ -70,7 +70,7 @@ const App = () => {
       }
 
       // ถ้าเจอข้อมูล
-      if (foundData) {
+      if (Input_from_user && foundData) {
 
         setCurrentSearch(foundData)
 
