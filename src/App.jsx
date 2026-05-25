@@ -9,6 +9,7 @@ const App = () => {
 
   const [CurrentSearch, setCurrentSearch] =
     useState({
+      days: "",
       name: "",
       jobREG: "",
       Status: "",
@@ -40,7 +41,7 @@ const App = () => {
       let foundData = null
 
       // วนหาทุก Sheet
-      for (const sheetName of sheetNames) {
+      for (const sheetName of sheetNames) { 
 
         const res = await axios.get(
           `https://sheets.googleapis.com/v4/spreadsheets/1RKsU1RU689kA18wbJe99Z0yJz80xZYVp6TT3QgLsl3Q/values/${sheetName}?key=AIzaSyDErYLbasUPZVkpNaedVvYsRk5IlXLk9W0`
@@ -51,17 +52,18 @@ const App = () => {
 
         // หาเลขงาน
         const found = rows.find(
-          row => row[1] === Input_from_user.toUpperCase()
+          row => row[2] === Input_from_user.toUpperCase()
         )
-
+        console.log(found)
         // ถ้าเจอ
         if (found) {
 
           foundData = {
-            name: found[0] || "",
-            jobREG: found[1] || "",
-            Status: found[2] || "",
-            note: found[3] || "",
+            day: found[0] || "",
+            name: found[1] || "",
+            jobREG: found[2] || "",
+            Status: found[3] || "",
+            note: found[4] || "",
             sheet: sheetName
           }
 
@@ -86,6 +88,7 @@ const App = () => {
 
         // ไม่เจอ
         setCurrentSearch({
+          day:"",
           name: "",
           jobREG: "",
           Status: "",
