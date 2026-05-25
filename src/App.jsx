@@ -116,17 +116,17 @@ const App = () => {
               ?.trim()
               ?.toUpperCase()
         )
-        foundData = (
-          {
-            day:"",
-            name: found[1],
-            jobREG: found[2],
-            Status: found[3],
-            note: found[4],
-            sheet: ""
-          }
-        )
-        // console.log(found)
+      foundData = (
+        {
+          day: "",
+          name: found[1],
+          jobREG: found[2],
+          Status: found[3],
+          note: found[4],
+          sheet: ""
+        }
+      )
+      // console.log(found)
 
       // =========================
       // FOUND DATA
@@ -204,7 +204,7 @@ const App = () => {
 
     <div className="app min-h-screen bg-black text-white">
 
-      <section className='InputSection text-center flex flex-col gap-10 p-10'>
+      <section className='InputSection text-center flex flex-col gap-4 p-10'>
 
         {/* HEADER */}
         <div className='text-2xl border-2 border-white rounded-xl p-4 bg-black/40'>
@@ -216,7 +216,11 @@ const App = () => {
           <p>
             กรอกเลขงานเพื่อตรวจสอบสถานะ
           </p>
-          <h6 className='font-bold underline'>รอบส่งรอบต่อไป : {PostSend_Date}</h6>
+          <h6 className='font-bold'>รอบส่งรอบต่อไป : {PostSend_Date}</h6>
+          <p className='underline '>ระบบสามารถตรวจสอบได้สําหรับเอกสารที่ส่ง
+          เข้ามาตั้งแต่วันที่ {<p className='w-1/7 mx-auto bg-green-500 font-bold font-mono'>01/05/2026</p>} เป็นต้นไป เอกสารที่ส่งก่อนวันดังกล่าว จะยังไม่สามารถ
+          ตรวจสอบสถานะได้ค่ะ
+        </p>
         </div>
 
         {/* RESULT MESSAGE */}
@@ -355,7 +359,7 @@ const App = () => {
             <option value="FEBRUARY2026">กุมภาพันธ์</option>
             <option value="MARCH2026">มีนาคม</option>
             <option value="APIRIL2026">เมษายน</option>
-            <option value="MAY2026">พฤศภาคม</option>
+            <option value="MAY2026">พฤษภาคม</option>
             <option value="JUNE2026">มิถุนายน</option>
             <option value="JULY2026">กรกฎาคม</option>
             <option value="AUGUST2026">สิงหาคม</option>
