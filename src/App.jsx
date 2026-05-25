@@ -189,7 +189,7 @@ const App = () => {
         )
 
         setResultColor(
-          "text-green-500"
+          "text-black"
         )
         setLoading(false)
         setShowPopup(true)
@@ -328,6 +328,7 @@ const App = () => {
                 border-2
                 text-2xl
                 bg-gray-700
+                text-white
                 flex
                 items-center
                 justify-center
@@ -356,6 +357,7 @@ const App = () => {
                 border-black
                 rounded-lg
                 hover:bg-red-500
+                hover:cursor-pointer
               '
               onClick={() =>
                 setShowPopup(false)
@@ -378,7 +380,7 @@ const App = () => {
               rounded-sm
               px-5
               py-3
-              bg-black/40
+              bg-black/70
               text-center
             '
             type="text"
@@ -401,12 +403,12 @@ const App = () => {
             className='
               w-9/12
               h-10
-              border-red-500
+              border-green-500
               border-2
               rounded-2xl
-              bg-red-900
+              bg-green-900
               hover:cursor-pointer
-              hover:bg-red-600
+              hover:bg-green-600
               transition-all
               px-10
             '

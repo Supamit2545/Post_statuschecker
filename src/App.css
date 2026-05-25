@@ -1,8 +1,11 @@
 .app{
   width: 100%;
   height: 100vh;
-  background: #023c73;
-  background: linear-gradient(147deg,rgba(2, 60, 115, 1) 0%, rgba(0, 0, 0, 1) 100%);
+  /* background: #023c73;
+  background: linear-gradient(147deg,rgba(2, 60, 115, 1) 0%, rgba(0, 0, 0, 1) 100%); */
+  background-image: url('BG.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
   color: white;
 }
 .InputSection{
