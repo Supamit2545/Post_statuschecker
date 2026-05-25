@@ -35,3 +35,9 @@
     height: 50%;
   }
 }
+/* Responsive */
+@media screen and (max-width : 500px){
+  div.app{
+    background-position: 20%;
+  }
+}
