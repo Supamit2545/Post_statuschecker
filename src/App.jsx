@@ -4,16 +4,20 @@ import axios from 'axios'
 
 const App = () => {
 
+  const [Loading, setLoading] =
+    useState(false)
+
   const [Input_from_user, setInput_from_user] =
     useState('')
 
   const [CurrentSearch, setCurrentSearch] =
     useState({
-      days: "",
+      day: "",
       name: "",
       jobREG: "",
       Status: "",
-      note: ""
+      note: "",
+      sheet: ""
     })
 
   const [ResultMessage, setResultMessage] =
@@ -22,57 +26,161 @@ const App = () => {
   const [ResultColor, setResultColor] =
     useState("text-white")
 
-  const [ShowPopup, setShowPopup] = useState(false)
+  const [ShowPopup, setShowPopup] =
+    useState(false)
+
+  // =========================
+  // GOOGLE CONFIG
+  // =========================
+
+  const API_KEY =
+    "AIzaSyCXVqsGb5HSs5SdnOHYx5jvjXi3iHCyj2A"
+
+  const SPREADSHEET_ID =
+    "1iDwG8zPOv0vri75xHKuVIxEfaFbd0uqa-RZqvRt0TB8"
+
+  // =========================
+  // GET DATA
+  // =========================
+
   const Getdata = async () => {
 
     try {
 
-      // ดึงรายชื่อทุก Sheet
+      // ดึง metadata ของ spreadsheet
       const meta = await axios.get(
-        'https://sheets.googleapis.com/v4/spreadsheets/1RKsU1RU689kA18wbJe99Z0yJz80xZYVp6TT3QgLsl3Q?key=AIzaSyDErYLbasUPZVkpNaedVvYsRk5IlXLk9W0'
+        `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}?key=${API_KEY}`
       )
 
-      // เอาชื่อ Sheet ออกมา
+      // เอาเฉพาะ GRID SHEET
       const sheetNames =
-        meta.data.sheets.map(
-          sheet => sheet.properties.title
-        )
+        meta.data.sheets
+
+          .filter(
+            sheet =>
+              sheet.properties.sheetType
+              === "GRID"
+          )
+
+          .map(
+            sheet =>
+              sheet.properties.title
+          )
+
+      // console.log(
+      //   "ALL SHEETS:",
+      //   sheetNames
+      // )
 
       let foundData = null
 
-      // วนหาทุก Sheet
-      for (const sheetName of sheetNames) { 
+      // วนหาในทุก Sheet
+      for (const sheetName of sheetNames) {
 
-        const res = await axios.get(
-          `https://sheets.googleapis.com/v4/spreadsheets/1RKsU1RU689kA18wbJe99Z0yJz80xZYVp6TT3QgLsl3Q/values/${sheetName}?key=AIzaSyDErYLbasUPZVkpNaedVvYsRk5IlXLk9W0`
-        )
+        try {
+          setLoading(true)
 
-        const rows =
-          res.data.values.slice(1)
+          // console.log(
+          //   "Searching in:",
+          //   sheetName
+          // )
 
-        // หาเลขงาน
-        const found = rows.find(
-          row => row[2] === Input_from_user.toUpperCase()
-        )
-        console.log(found)
-        // ถ้าเจอ
-        if (found) {
+          // =========================
+          // GET SHEET DATA
+          // =========================
 
-          foundData = {
-            day: found[0] || "",
-            name: found[1] || "",
-            jobREG: found[2] || "",
-            Status: found[3] || "",
-            note: found[4] || "",
-            sheet: sheetName
+          const res = await axios.get(
+            `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${encodeURIComponent(sheetName)}!A:Z?key=${API_KEY}`
+          )
+
+          // กัน sheet ว่าง
+          const rows =
+            res.data.values || []
+
+          // ตัด header
+          const clearRows =
+            rows.slice(1)
+
+          // console.log(clearRows)
+
+          // =========================
+          // FIND JOB NUMBER
+          // =========================
+
+          const found =
+            clearRows.find(
+
+              row =>
+
+                row[2]
+                  ?.toString()
+                  ?.trim()
+                  ?.toUpperCase()
+
+                ===
+
+                Input_from_user
+                  ?.toString()
+                  ?.trim()
+                  ?.toUpperCase()
+            )
+
+          // console.log(
+          //   "FOUND:",
+          //   found
+          // )
+
+          // =========================
+          // IF FOUND
+          // =========================
+
+          if (found) {
+
+            foundData = {
+
+              day:
+                found[0] || "",
+
+              name:
+                found[1] || "",
+
+              jobREG:
+                found[2] || "",
+
+              Status:
+                found[3] || "",
+
+              note:
+                found[4] || "",
+
+              sheet:
+                sheetName
+                
+            }
+            setLoading(false)
+
+            break
           }
 
-          break
+        } catch (err) {
+
+          console.log(
+            "SHEET ERROR:",
+            sheetName
+          )
+
+          console.log(
+            err.response?.data
+          )
+          setLoading(false)
         }
       }
 
-      // ถ้าเจอข้อมูล
-      if (Input_from_user && foundData) {
+      // =========================
+      // FOUND DATA
+      // =========================
+
+      if (foundData) {
 
         setCurrentSearch(foundData)
 
@@ -80,19 +188,30 @@ const App = () => {
           `พบข้อมูล`
         )
 
-        setResultColor("text-green-500")
-
+        setResultColor(
+          "text-green-500"
+        )
+        setLoading(false)
         setShowPopup(true)
 
       } else {
 
-        // ไม่เจอ
+        // =========================
+        // NOT FOUND
+        // =========================
+
         setCurrentSearch({
-          day:"",
+
+          day: "",
+
           name: "",
+
           jobREG: "",
+
           Status: "",
+
           note: "",
+
           sheet: ""
         })
 
@@ -100,14 +219,22 @@ const App = () => {
           "ไม่พบข้อมูล"
         )
 
-        setResultColor("text-red-500")
-
+        setResultColor(
+          "text-red-500"
+        )
+        setLoading(false)
         setShowPopup(false)
       }
 
     } catch (err) {
 
-      console.log(err)
+      console.log(
+        "MAIN ERROR:"
+      )
+
+      console.log(
+        err.response?.data
+      )
 
       setResultMessage(
         "เกิดข้อผิดพลาด"
@@ -116,7 +243,7 @@ const App = () => {
       setResultColor(
         "text-red-500"
       )
-
+      setLoading(false)
       setShowPopup(false)
     }
   }
@@ -127,7 +254,7 @@ const App = () => {
 
       <section className='InputSection text-center flex flex-col gap-10 p-10'>
 
-        {/* Header */}
+        {/* HEADER */}
         <div className='text-2xl border-2 border-white rounded-xl p-4 bg-black/40'>
 
           <h1 className='font-bold underline text-green-500'>
@@ -135,47 +262,90 @@ const App = () => {
           </h1>
 
           <p>
-            กรอกข้อมูลเลขงานที่ต้องการตรวจสอบในช่องด้านล่างได้เลยครับ
+            กรอกเลขงานเพื่อตรวจสอบสถานะ
           </p>
 
         </div>
 
-        {/* Result Message */}
+        {/* RESULT MESSAGE */}
         <div
-          id='Result-Message'
           className={`text-2xl font-bold ${ResultColor}`}
         >
           {ResultMessage}
         </div>
 
-        {/* Result Popup */}
-        <div className={`${ShowPopup == true ? "flex" : 'hidden'} fixed inset-0 bg-black/70 items-center justify-center z-50`}>
+        {/* POPUP */}
+        <div
+          className={`
+            ${ShowPopup ? "flex" : "hidden"}
+            fixed
+            inset-0
+            bg-black/70
+            items-center
+            justify-center
+            z-50
+          `}
+        >
 
-          <div className='w-9/12 max-w-xl bg-white text-black rounded-xl p-5 space-y-4 relative'>
+          <div
+            className='
+              w-9/12
+              max-w-xl
+              bg-white
+              text-black
+              rounded-xl
+              p-5
+              space-y-4
+              relative
+            '
+          >
+            {/* NAME */}
             <p className='border-2 font-bold rounded-2xl bg-blue-500 text-white text-center'>
               ชื่อผู้แจ้ง
             </p>
 
-            <p className='h- border-black border-2 text-2xl bg-gray-700 text-green-500 flex items-center justify-center'>
+            <p className='border-black border-2 text-2xl bg-gray-700 text-green-500 flex items-center justify-center py-2'>
               {CurrentSearch.name || "-"}
             </p>
 
+            {/* JOB NUMBER */}
             <p className='border-2 font-bold rounded-2xl bg-blue-500 text-white text-center'>
               เลขงาน
             </p>
 
-            <p className='h-10 border-black border-2 text-2xl bg-gray-700 text-yellow-400 flex items-center justify-center'>
+            <p className='border-black border-2 text-2xl bg-gray-700 text-yellow-400 flex items-center justify-center py-2'>
               {CurrentSearch.jobREG || "-"}
             </p>
 
+            {/* STATUS */}
             <p className='border-2 font-bold rounded-2xl bg-blue-500 text-white text-center'>
               สถานะ
             </p>
 
-            <p id='StatusText' className={`h-10 border-black border-2 text-2xl bg-gray-500 ${CurrentSearch.Status == 'ติดปัญหา' ? "text-red-500" : 'text-green-500'} flex items-center justify-center`}>
+            <p
+              className={`
+                border-black
+                border-2
+                text-2xl
+                bg-gray-500
+                flex
+                items-center
+                justify-center
+                py-2
+
+                ${CurrentSearch.Status
+                  === "ติดปัญหา"
+
+                  ? "text-red-500"
+
+                  : "text-green-500"
+                }
+              `}
+            >
               {CurrentSearch.Status || "-"}
             </p>
 
+            {/* NOTE */}
             <p className='border-2 font-bold rounded-2xl bg-blue-500 text-white text-center'>
               หมายเหตุ
             </p>
@@ -183,30 +353,71 @@ const App = () => {
             <p className='min-h-10 border-black border-2 text-2xl bg-white text-black font-bold flex items-center justify-center py-2'>
               {CurrentSearch.note || "-"}
             </p>
-            <button className='border-2 border-black rounded-2xl px-5 py-2 bg-red-900 text-white hover:cursor-pointer hover:bg-red-500 transition-all' onClick={() => setShowPopup(false)}>ปิดหน้าต่าง</button>
+            {/* CLOSE */}
+            <button
+              className='
+                text-white
+                bg-red-600
+                px-10
+                py-3
+                border-2
+                border-black
+                rounded-lg
+                hover:bg-red-500
+              '
+              onClick={() =>
+                setShowPopup(false)
+              }
+            >
+              ปิดหน้าต่าง
+            </button>
+
           </div>
         </div>
 
-        {/* Input */}
+        {/* INPUT */}
         <div className='Insert-Field'>
 
           <input
-            className='Input-Regjob w-9/12 border-2 border-white rounded-sm px-5 py-3 bg-black/40 text-center'
+            className='
+              w-9/12
+              border-2
+              border-white
+              rounded-sm
+              px-5
+              py-3
+              bg-black/40
+              text-center
+            '
             type="text"
-            placeholder='Ex. REG260524-001'
+            placeholder='Ex. Kapostjob-001'
             value={Input_from_user}
             onChange={(e) => {
-              setInput_from_user(e.target.value)
+
+              setInput_from_user(
+                e.target.value
+              )
             }}
           />
 
         </div>
 
-        {/* Submit */}
+        {/* BUTTON */}
         <div className='Submit_Btn'>
 
           <button
-            className='w-9/11 h-10 border-red-500 border-2 rounded-2xl bg-red-900 hover:cursor-pointer hover:bg-red-600 transition-all px-10'
+            className='
+              w-9/12
+              h-10
+              border-red-500
+              border-2
+              rounded-2xl
+              bg-red-900
+              hover:cursor-pointer
+              hover:bg-red-600
+              transition-all
+              px-10
+            '
             onClick={Getdata}
           >
             ตรวจสอบสถานะ
@@ -215,6 +426,59 @@ const App = () => {
         </div>
 
       </section>
+      {/* LOADING */}
+      {
+        Loading && (
+
+          <div
+            className='
+        fixed
+        inset-0
+        bg-black/80
+        flex
+        items-center
+        justify-center
+        z-[999]
+      '
+          >
+
+            <div
+              className='
+          flex
+          flex-col
+          items-center
+          gap-5
+        '
+            >
+
+              {/* Spinner */}
+              <div
+                className='
+            w-20
+            h-20
+            border-4
+            border-white
+            border-t-green-500
+            rounded-full
+            animate-spin
+          '
+              />
+
+              <p
+                className='
+            text-2xl
+            text-green-400
+            font-bold
+          '
+              >
+                กำลังค้นหาข้อมูล...
+              </p>
+
+            </div>
+
+          </div>
+        )
+      }
 
     </div>
   )
