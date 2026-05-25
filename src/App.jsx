@@ -46,7 +46,7 @@ const App = () => {
   // =========================
 
   const Getdata = async () => {
-
+    setLoading(true)
     try {
 
       // ดึง metadata ของ spreadsheet
@@ -271,7 +271,7 @@ const App = () => {
 
         {/* RESULT MESSAGE */}
         <div
-          className={`w-3/6 mx-auto text-2xl font-bold border-2 bg-black/70 ${ResultColor}`}
+          className={`mx-auto text-2xl font-bold border-2 bg-black/70 ${ResultColor}`}
         >
           {ResultMessage}
         </div>
