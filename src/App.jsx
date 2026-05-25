@@ -349,7 +349,7 @@ const App = () => {
         </div>
         {/* MonthSelector */}
         <div className='flex flex-col center space-y-4'>
-          <p className='underline text-black font-bold text-4xl'>กรุณาเลือกเดือนที่ค้นหา</p>
+          <p className='underline text-white font-bold text-2xl'>กรุณาเลือกเดือนที่ค้นหา</p>
           <select className='mx-auto w-3/9 border-2 bg-black/70 text-xl px-2 py-1' name="" id="Monthselect" onChange={(e) => { setMonthselect(e.target.value) }}>
             <option value="JANUARY2026">มกราคม</option>
             <option value="FEBRUARY2026">กุมภาพันธ์</option>
