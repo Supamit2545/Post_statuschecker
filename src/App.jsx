@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import './App.css'
 import axios from 'axios'
 
@@ -8,7 +8,8 @@ const App = () => {
     useState(false)
 
   const PostSend_Date = "ยังไม่กำหนดรอบส่ง"
-
+  const [Monthselect, setMonthselect] = useState()
+  // console.log(Monthselect)
   const [Input_from_user, setInput_from_user] =
     useState('')
 
@@ -40,10 +41,18 @@ const App = () => {
 
   const SPREADSHEET_ID =
     "1iDwG8zPOv0vri75xHKuVIxEfaFbd0uqa-RZqvRt0TB8"
-
+  const YearSearch = ""
+  const MonthSearch = ""
   // =========================
   // GET DATA
   // =========================
+
+  // const TestgetData = async () => {
+  //   const res = await axios.get(
+  //     `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${Monthselect}?key=${API_KEY}`
+  //   ).then(res => { console.log(res) })
+
+  // }
 
   const Getdata = async () => {
     setLoading(true)
@@ -76,113 +85,54 @@ const App = () => {
 
       let foundData = null
 
-      // วนหาในทุก Sheet
-      for (const sheetName of sheetNames) {
 
-        try {
-          setLoading(true)
+      const range =
+        `'${Monthselect}'!A:Z`
 
-          // console.log(
-          //   "Searching in:",
-          //   sheetName
-          // )
+      const res = await axios.get(
+        `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${encodeURIComponent(range)}?key=${API_KEY}`
+      )
 
-          // =========================
-          // GET SHEET DATA
-          // =========================
+      const rows =
+        res.data.values || []
 
-          const res = await axios.get(
-            `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${encodeURIComponent(sheetName)}!A:Z?key=${API_KEY}`
-          )
+      const clearRows =
+        rows.slice(1)
 
-          // กัน sheet ว่าง
-          const rows =
-            res.data.values || []
+      const found =
+        clearRows.find(
 
-          // ตัด header
-          const clearRows =
-            rows.slice(1)
+          row =>
 
-          // console.log(clearRows)
+            row[2]
+              ?.toString()
+              ?.trim()
+              ?.toUpperCase()
 
-          // =========================
-          // FIND JOB NUMBER
-          // =========================
+            ===
 
-          const found =
-            clearRows.find(
-
-              row =>
-
-                row[2]
-                  ?.toString()
-                  ?.trim()
-                  ?.toUpperCase()
-
-                ===
-
-                Input_from_user
-                  ?.toString()
-                  ?.trim()
-                  ?.toUpperCase()
-            )
-
-          // console.log(
-          //   "FOUND:",
-          //   found
-          // )
-
-          // =========================
-          // IF FOUND
-          // =========================
-
-          if (found) {
-
-            foundData = {
-
-              day:
-                found[0] || "",
-
-              name:
-                found[1] || "",
-
-              jobREG:
-                found[2] || "",
-
-              Status:
-                found[3] || "",
-
-              note:
-                found[4] || "",
-
-              sheet:
-                sheetName
-                
-            }
-            setLoading(false)
-
-            break
+            Input_from_user
+              ?.toString()
+              ?.trim()
+              ?.toUpperCase()
+        )
+        foundData = (
+          {
+            day:"",
+            name: found[1],
+            jobREG: found[2],
+            Status: found[3],
+            note: found[4],
+            sheet: ""
           }
-
-        } catch (err) {
-
-          console.log(
-            "SHEET ERROR:",
-            sheetName
-          )
-
-          console.log(
-            err.response?.data
-          )
-          setLoading(false)
-        }
-      }
+        )
+        // console.log(found)
 
       // =========================
       // FOUND DATA
       // =========================
 
-      if ( Input_from_user &&foundData) {
+      if (Input_from_user && foundData) {
 
         setCurrentSearch(foundData)
 
@@ -230,16 +180,16 @@ const App = () => {
 
     } catch (err) {
 
-      console.log(
-        "MAIN ERROR:"
-      )
+      // console.log(
+      //   "MAIN ERROR:"
+      // )
 
-      console.log(
-        err.response?.data
-      )
+      // console.log(
+      //   err.response?.data
+      // )
 
       setResultMessage(
-        "เกิดข้อผิดพลาด"
+        "ไม่พบข้อมูล"
       )
 
       setResultColor(
@@ -266,7 +216,7 @@ const App = () => {
           <p>
             กรอกเลขงานเพื่อตรวจสอบสถานะ
           </p>
-          <h6 className='font-bold underline'>รอบส่ง : {PostSend_Date}</h6>
+          <h6 className='font-bold underline'>รอบส่งรอบต่อไป : {PostSend_Date}</h6>
         </div>
 
         {/* RESULT MESSAGE */}
@@ -397,7 +347,24 @@ const App = () => {
           />
 
         </div>
-
+        {/* MonthSelector */}
+        <div className='flex flex-col center space-y-4'>
+          <p className='underline text-black font-bold text-4xl'>กรุณาเลือกเดือนที่ค้นหา</p>
+          <select className='mx-auto w-3/9 border-2 bg-black/70 text-xl px-2 py-1' name="" id="Monthselect" onChange={(e) => { setMonthselect(e.target.value) }}>
+            <option value="JANUARY2026">มกราคม</option>
+            <option value="FEBRUARY2026">กุมภาพันธ์</option>
+            <option value="MARCH2026">มีนาคม</option>
+            <option value="APIRIL2026">เมษายน</option>
+            <option value="MAY2026">พฤศภาคม</option>
+            <option value="JUNE2026">มิถุนายน</option>
+            <option value="JULY2026">กรกฎาคม</option>
+            <option value="AUGUST2026">สิงหาคม</option>
+            <option value="SEPTEMBER2026">กันยายน</option>
+            <option value="OCTOBER2026">ตุลาคม</option>
+            <option value="NOVEMBER2026">พฤศจิกายน</option>
+            <option value="DECEMBER2026">ธันวาคม</option>
+          </select>
+        </div>
         {/* BUTTON */}
         <div className='Submit_Btn'>
 
@@ -418,6 +385,23 @@ const App = () => {
           >
             ตรวจสอบสถานะ
           </button>
+          {/* <button
+            className='
+              w-9/12
+              h-10
+              border-green-500
+              border-2
+              rounded-2xl
+              bg-green-900
+              hover:cursor-pointer
+              hover:bg-green-600
+              transition-all
+              px-10
+            '
+            onClick={TestgetData}
+          >
+            Test
+          </button> */}
         </div>
         <div className='absolute bottom-0 left-0 border-2 bg-gray-700 px-2 py-1 rounded-xl'>
           <p>เว็บไซต์นี้จัดเพื่อความสะดวกสบายในการตรวจสอบสถานะของเอกสารในบริษัทโดยไม่แสวงหาผลกำไรและมีการเรียกเก็บเงินใดทั้งสิ้น</p>
