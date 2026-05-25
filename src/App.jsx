@@ -7,6 +7,8 @@ const App = () => {
   const [Loading, setLoading] =
     useState(false)
 
+  const PostSend_Date = "ยังไม่กำหนดรอบส่ง"
+
   const [Input_from_user, setInput_from_user] =
     useState('')
 
@@ -180,7 +182,7 @@ const App = () => {
       // FOUND DATA
       // =========================
 
-      if (foundData) {
+      if ( Input_from_user &&foundData) {
 
         setCurrentSearch(foundData)
 
@@ -189,7 +191,7 @@ const App = () => {
         )
 
         setResultColor(
-          "text-black"
+          "text-white"
         )
         setLoading(false)
         setShowPopup(true)
@@ -264,12 +266,12 @@ const App = () => {
           <p>
             กรอกเลขงานเพื่อตรวจสอบสถานะ
           </p>
-
+          <h6 className='font-bold underline'>รอบส่ง : {PostSend_Date}</h6>
         </div>
 
         {/* RESULT MESSAGE */}
         <div
-          className={`text-2xl font-bold ${ResultColor}`}
+          className={`w-3/6 mx-auto text-2xl font-bold border-2 bg-black/70 ${ResultColor}`}
         >
           {ResultMessage}
         </div>
