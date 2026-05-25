@@ -327,19 +327,11 @@ const App = () => {
                 border-black
                 border-2
                 text-2xl
-                bg-gray-500
+                bg-gray-700
                 flex
                 items-center
                 justify-center
                 py-2
-
-                ${CurrentSearch.Status
-                  === "ติดปัญหา"
-
-                  ? "text-red-500"
-
-                  : "text-green-500"
-                }
               `}
             >
               {CurrentSearch.Status || "-"}
