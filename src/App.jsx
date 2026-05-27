@@ -121,8 +121,8 @@ const App = () => {
           day: "",
           name: found[1],
           jobREG: found[2],
-          Status: found[3],
-          note: found[4],
+          Status: found[4],
+          note: found[5],
           sheet: ""
         }
       )
