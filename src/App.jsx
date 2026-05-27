@@ -340,7 +340,7 @@ const App = () => {
               text-center
             '
             type="text"
-            placeholder='Ex. Kapostjob-001'
+            placeholder='Ex.MAYKAPOSTJOB-000'
             value={Input_from_user}
             onChange={(e) => {
 
