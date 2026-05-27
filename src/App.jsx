@@ -10,8 +10,8 @@ const App = () => {
   const PostSend_Date = "ยังไม่กำหนดรอบส่ง"
   const [Monthselect, setMonthselect] = useState()
   // console.log(Monthselect)
-  const [Input_from_user, setInput_from_user] =
-    useState('')
+  const [Input_from_user, setInput_from_user] = useState('')
+  const [ShowPopuptodo_List, setShowPopuptodo_List] = useState(false)
 
   const [CurrentSearch, setCurrentSearch] =
     useState({
@@ -20,7 +20,23 @@ const App = () => {
       jobREG: "",
       Status: "",
       note: "",
-      sheet: ""
+      sheet: "",
+      REGISTER:"",
+      RENEW:"",
+      REGISTER_STABLE:"",
+      RENEW_STABLE: "",
+      TRANSFER: "",
+      CERTIFY: "",
+      BIRTH_NOTIFY: "",
+      P3G: "",
+      P4G: "",
+      EXPORT: "",
+      BREED_ADJUST:"",
+      LATE_90_DAYS: "",
+      LATE_180_DAYS: "",
+      LATE_1_YEAR:"",
+      EDIT: "",
+      BREEDING: ""
     })
 
   const [ResultMessage, setResultMessage] =
@@ -116,6 +132,7 @@ const App = () => {
               ?.trim()
               ?.toUpperCase()
         )
+      console.log(found)
       foundData = (
         {
           day: "",
@@ -123,7 +140,24 @@ const App = () => {
           jobREG: found[2],
           Status: found[4],
           note: found[5],
-          sheet: ""
+          sheet: "",
+          REGISTER: found[7],
+          RENEW: found[8],
+          REGISTER_STABLE: found[9],
+          RENEW_STABLE: found[10],
+          TRANSFER: found[11],
+          CERTIFY: found[12],
+          BIRTH_NOTIFY: found[13],
+          P3G: found[14],
+          P4G: found[15],
+          EXPORT: found[16],
+          BREED_ADJUST: "ปรับผสม",
+          LATE_90_DAYS: "ช้า 90 วัน",
+          LATE_180_DAYS: "ช้า 180 วัน",
+          LATE_1_YEAR: "ช้า 1 ปี",
+          EDIT: found[21],
+          BREEDING: found[22]
+
         }
       )
       // console.log(found)
@@ -212,15 +246,15 @@ const App = () => {
           <h1 className='font-bold underline text-green-500'>
             Status Post Checker
           </h1>
-
+          
           <p>
             กรอกเลขงานเพื่อตรวจสอบสถานะ
           </p>
           <h6 className='font-bold'>รอบส่งรอบต่อไป : {PostSend_Date}</h6>
           <p className='underline '>ระบบสามารถตรวจสอบได้สําหรับเอกสารที่ส่ง
-          เข้ามาตั้งแต่วันที่ {<p className='w-1/7 mx-auto bg-green-500 font-bold font-mono'>01/05/2026</p>} เป็นต้นไป เอกสารที่ส่งก่อนวันดังกล่าว จะยังไม่สามารถ
-          ตรวจสอบสถานะได้ค่ะ
-        </p>
+            เข้ามาตั้งแต่วันที่ {<p className='w-1/7 mx-auto bg-green-500 font-bold font-mono'>01/05/2026</p>} เป็นต้นไป เอกสารที่ส่งก่อนวันดังกล่าว จะยังไม่สามารถ
+            ตรวจสอบสถานะได้ค่ะ
+          </p>
         </div>
 
         {/* RESULT MESSAGE */}
@@ -302,9 +336,91 @@ const App = () => {
             <p className='min-h-10 border-black border-2 text-2xl bg-white text-black font-bold flex items-center justify-center py-2'>
               {CurrentSearch.note || "-"}
             </p>
-            {/* CLOSE */}
-            <button
-              className='
+            <div className='flex flex-col space-y-3'>
+              {/* JobtodoLIST */}
+              <button
+                className='
+                  text-white
+                  bg-blue-600
+                  px-10
+                  py-3
+                  border-2
+                  border-black
+                  rounded-lg
+                  hover:bg-blue-500
+                  hover:cursor-pointer
+                '
+                onClick={() =>
+                  setShowPopuptodo_List(true)
+                }
+              >
+                ตรวจสอบเอกสารที่ทำ
+              </button>
+              {/* CLOSE */}
+              <button
+                className='
+                  text-white
+                  bg-red-600
+                  px-10
+                  py-3
+                  border-2
+                  border-black
+                  rounded-lg
+                  hover:bg-red-500
+                  hover:cursor-pointer
+                '
+                onClick={() =>
+                  setShowPopup(false)
+                }
+              >
+                ปิดหน้าต่าง
+              </button>
+            </div>
+
+          </div>
+        </div>
+        <div
+          className={`
+            ${ShowPopuptodo_List ? "flex" : "hidden"}
+            fixed
+            inset-0
+            bg-black/70
+            items-center
+            justify-center
+            z-50
+          `}
+        >
+          <div className='className=
+              w-9/12
+              max-w-xl
+              bg-white
+              text-black
+              rounded-xl
+              p-5
+              space-y-4
+              relative
+            '>
+            <div
+            >
+              <p className='border-2 font-bold rounded-2xl bg-blue-500 text-white text-center'>
+                เอกสารที่สมาคมได้รับ
+              </p>
+              <div className='w-full flex flex-col text-start '>
+                <p className='font-bold'>สมัครสมาชิก : {CurrentSearch.REGISTER || "0"} ใบ</p>
+                <p className='font-bold'>ต่ออายุสมาชิก : {CurrentSearch.RENEW || "0"} ใบ</p>
+                <p className='font-bold'>จดคอก : {CurrentSearch.REGISTER_STABLE || "0"} ใบ</p>
+                <p className='font-bold'>ต่อคอก : {CurrentSearch.RENEW_STABLE || "0"} ใบ</p>
+                <p className='font-bold'>โอนเปลี่ยนเจ้าของ : {CurrentSearch.TRANSFER || "0"} ใบ </p>
+                <p className='font-bold'>ขึ้นทะเบียนตัวสุนัข : {CurrentSearch.CERTIFY || "0"} ใบ</p>
+                <p className='font-bold'>แจ้งเกิด : {CurrentSearch.BIRTH_NOTIFY || "0"} ตัว </p>
+                <p className='font-bold'>ใบพันธุ์ประวัติ 3 Gen : {CurrentSearch.P3G || "0"} ใบ</p>
+                <p className='font-bold'>ใบพันธุ์ประวัติ 4 Gen : {CurrentSearch.P4G || "0"} ใบ</p>
+                <p className='font-bold'>Export : {CurrentSearch.EXPORT || "0"} ตัว</p>
+                <p className='font-bold'>แก้ไขในเอกสาร : {CurrentSearch.EDIT || "0"} ใบ</p>
+                <p className='font-bold'>แจ้งผสม : {CurrentSearch.BREEDING || "0"} ใบ</p>
+              </div>
+              <button
+                className='
                 text-white
                 bg-red-600
                 px-10
@@ -315,13 +431,13 @@ const App = () => {
                 hover:bg-red-500
                 hover:cursor-pointer
               '
-              onClick={() =>
-                setShowPopup(false)
-              }
-            >
-              ปิดหน้าต่าง
-            </button>
-
+                onClick={() =>
+                  setShowPopuptodo_List(false)
+                }
+              >
+                ปิดหน้าต่าง
+              </button>
+            </div>
           </div>
         </div>
 
