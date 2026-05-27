@@ -207,7 +207,7 @@ const App = () => {
       <section className='InputSection text-center flex flex-col gap-4 p-10'>
 
         {/* HEADER */}
-        <div className='text-2xl border-2 border-white rounded-xl p-4 bg-black/40'>
+        <div className='HeadText border-2 border-white rounded-xl p-4 bg-black/40'>
 
           <h1 className='font-bold underline text-green-500'>
             Status Post Checker
@@ -353,7 +353,7 @@ const App = () => {
         </div>
         {/* MonthSelector */}
         <div className='flex flex-col center space-y-4'>
-          <p className='w-2/6 mx-auto underline text-white font-bold text-2xl rounded-xl py-1 bg-black/70'>กรุณาเลือกเดือนที่ค้นหา</p>
+          <p className='w-3/6 mx-auto underline text-white font-bold text-2xl rounded-xl py-1 bg-black/70'>กรุณาเลือกเดือนที่ค้นหา</p>
           <select className='mx-auto w-3/9 border-2 bg-black/70 text-xl px-2 py-1' name="" id="Monthselect" onChange={(e) => { setMonthselect(e.target.value) }}>
             <option value="JANUARY2026">มกราคม</option>
             <option value="FEBRUARY2026">กุมภาพันธ์</option>
@@ -407,10 +407,10 @@ const App = () => {
             Test
           </button> */}
         </div>
-        <div className='absolute bottom-0 left-0 border-2 bg-gray-700 px-2 py-1 rounded-xl'>
+        {/* <div className='absolute bottom-0 left-0 border-2 bg-gray-700 px-2 py-1 rounded-xl'>
           <p>เว็บไซต์นี้จัดเพื่อความสะดวกสบายในการตรวจสอบสถานะของเอกสารในบริษัทโดยไม่แสวงหาผลกำไรและมีการเรียกเก็บเงินใดทั้งสิ้น</p>
           <p>เว็บไซต์นี้เป็นเพียงตัว Demo เท่านั้น</p>
-        </div>
+        </div> */}
 
       </section>
       {/* LOADING */}
