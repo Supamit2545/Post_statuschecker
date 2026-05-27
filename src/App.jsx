@@ -400,12 +400,11 @@ const App = () => {
               space-y-4
               relative
             '>
-            <div
-            >
+            <div className='space-y-4'>
               <p className='border-2 font-bold rounded-2xl bg-blue-500 text-white text-center'>
                 เอกสารที่สมาคมได้รับ
               </p>
-              <div className='w-full flex flex-col text-start '>
+              <div className='w-full flex flex-col text-start border-2 p-2 rounded-xl bg-black/10'>
                 <p className='font-bold'>สมัครสมาชิก : {CurrentSearch.REGISTER || "0"} ใบ</p>
                 <p className='font-bold'>ต่ออายุสมาชิก : {CurrentSearch.RENEW || "0"} ใบ</p>
                 <p className='font-bold'>จดคอก : {CurrentSearch.REGISTER_STABLE || "0"} ใบ</p>
